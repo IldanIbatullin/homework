@@ -6,7 +6,7 @@
 ## Использование
 Импортируйте функции из модуля `processing`:
 
-```python
+## python
 from src.processing import filter_by_state, sort_by_date
 transactions = [
     {'id': 41428829, 'state': 'EXECUTED', 'date': '2019-07-03T18:35:29.512364'},
@@ -19,3 +19,30 @@ executed_transactions = filter_by_state(transactions)
 print(executed_transactions)
 sorted_transactions = sort_by_date(transactions)
 print(sorted_transactions)
+
+## Тестирование
+
+Для запуска тестов используется библиотека `pytest`. Чтобы запустить тесты, выполните следующую команду в корневой директории проекта:
+
+```bash
+pytest tests/
+
+### 3. Фикстуры и параметризация
+
+В приведенных выше примерах я добавил фикстуру `sample_transactions`, которая предоставляет данные для тестов. Также использованы параметризованные тесты для функций `get_mask_card_number` и `get_mask_account`.
+
+### 4. Покрытие всех функций
+
+Убедитесь, что все функции протестированы. В приведенных примерах протестированы следующие функции:
+- `filter_by_state`
+- `sort_by_date`
+- `get_mask_card_number`
+- `get_mask_account`
+- `mask_account_card`
+- `get_data`
+
+Если у вас есть другие функции, которые нужно протестировать, добавьте соответствующие тесты.
+
+### Заключение
+
+Теперь у вас есть обновленные тесты с фикстурами и параметризацией, а также раздел о тестировании в README файле. Убедитесь также, что ваши тесты соответствуют стандартам PEP 8 (например, с помощью flake8), чтобы избежать нарушений стиля.

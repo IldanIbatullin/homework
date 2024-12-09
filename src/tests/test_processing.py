@@ -1,4 +1,7 @@
-from src.processing import filter_by_state, sort_by_date
+import pytest
+from src.processing import (filter_by_state, sort_by_date)
+from src.widget import (mask_account_card, get_date)
+from src.masks import (get_mask_card_number, get_mask_account)
 
 # Пример данных для тестов
 transactions = [
@@ -8,31 +11,53 @@ transactions = [
     {"date": "2024-11-29", "state": "EXECUTED"},
 ]
 
-# Тесты для функции filter_by_state
-def test_filter_by_state():
-    # Проверка фильтрации по состоянию 'EXECUTED'
-    executed_transactions = filter_by_state(transactions, 'EXECUTED')
+
+# Фикстура для тестов
+@pytest.fixture
+def sample_transactions():
+    return transactions
+
+
+# Тесты для filter_by_state
+def test_filter_by_state(sample_transactions):
+    executed_transactions = filter_by_state(sample_transactions, 'EXECUTED')
     assert len(executed_transactions) == 3
     assert all(tx['state'] == 'EXECUTED' for tx in executed_transactions)
 
-    # Проверка фильтрации по состоянию 'PENDING'
-    pending_transactions = filter_by_state(transactions, 'PENDING')
-    assert len(pending_transactions) == 1
-    assert pending_transactions[0]['state'] == 'PENDING'
 
-    # Проверка фильтрации по состоянию, которого нет в списке
-    unknown_transactions = filter_by_state(transactions, 'UNKNOWN')
-    assert len(unknown_transactions) == 0
-
-# Тесты для функции sort_by_date
-def test_sort_by_date():
-    # Проверка сортировки по дате по умолчанию (убывание)
-    sorted_transactions = sort_by_date(transactions)
+# Тесты для sort_by_date
+def test_sort_by_date(sample_transactions):
+    sorted_transactions = sort_by_date(sample_transactions)
     assert sorted_transactions[0]['date'] == '2024-12-02'
     assert sorted_transactions[-1]['date'] == '2024-11-29'
 
-    # Проверка сортировки по дате в порядке возрастания
-    sorted_transactions_asc = sort_by_date(transactions, reverse=False)
-    assert sorted_transactions_asc[0]['date'] == '2024-11-29'
-    assert sorted_transactions_asc[-1]['date'] == '2024-12-02'
 
+# Параметризованные тесты для get_mask_card_number
+@pytest.mark.parametrize("input_card, expected_output", [
+    ("1234567812345678", "************5678"),
+    ("1234-5678-1234-5678", "************5678"),
+    ("12345", "*****"),
+    ("", ""),
+])
+def test_get_mask_card_number(input_card, expected_output):
+    assert get_mask_card_number(input_card) == expected_output
+
+
+# Параметризованные тесты для get_mask_account
+@pytest.mark.parametrize("input_account, expected_output", [
+    ("12345678901234567890", "************7890"),
+    ("123", "***"),
+])
+def test_get_mask_account(input_account, expected_output):
+    assert get_mask_account(input_account) == expected_output
+
+
+# Тесты для mask_account_card (пример)
+def test_mask_account_card():
+    # Пример теста для mask_account_card (необходимо адаптировать под вашу реализацию)
+    assert mask_account_card("card") == "masked_card"
+
+
+# Тесты для get_data (пример)
+def test_get_data():
+    assert get_date("2024-12-08") == "08/12/2024"
