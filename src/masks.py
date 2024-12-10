@@ -1,13 +1,20 @@
+import re
+
+
 def get_mask_card_number(card_number: str) -> str:
-    if len(card_number) != 16:
+    # Удаляем все символы, кроме цифр
+    card_number = re.sub(r"\D", "", card_number)
+
+    if len(card_number) == 0:
         raise ValueError("Неверный формат номера карты")
-    return f"**** **** **** {card_number[-4:]}"
+    elif len(card_number) < 4:
+        return "*" * len(card_number)  # Возвращаем столько звездочек, сколько цифр
+    return "*" * (len(card_number) - 4) + card_number[-4:]
 
 
 def get_mask_account(account_number: str) -> str:
-    if len(account_number) != 20:
+    if not account_number or len(account_number) == 0:
         raise ValueError("Неверный формат номера счета")
-    return f"{account_number[:5]}**** **** **** ****"
-
-
-
+    elif len(account_number) < 4:
+        return "*" * len(account_number)  # Возвращаем столько звездочек, сколько цифр
+    return "*" * (len(account_number) - 4) + account_number[-4:]
