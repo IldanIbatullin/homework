@@ -16,5 +16,5 @@ def get_mask_account(account_number: str) -> str:
     if not account_number or len(account_number) == 0:
         raise ValueError("Неверный формат номера счета")
     elif len(account_number) < 4:
-        return "*" * len(account_number)  # Возвращаем столько звездочек, сколько цифр
-    return "*" * (len(account_number) - 4) + account_number[-4:]
+        return "*" * len(account_number)  # Возвращает одинаковое кол-во * и цифр
+    return "*" * (len(account_number) - 8) + account_number[-4:]
